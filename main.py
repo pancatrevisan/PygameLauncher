@@ -1,11 +1,12 @@
 import pygame
 import json
-
+import subprocess 
 button_left = None
 button_right = None 
 button_confirm = None
 button_cancel = None
-
+apps = None
+current_app = -1
 
 
 
@@ -18,12 +19,29 @@ BRANCO = (255,255,255)
 
 clock = pygame.time.Clock()
 
-
 font = pygame.font.Font(None , 24)
 
-#loop de config do joy/teclado
+def run_commands(cmd):
+    for c in cmd:
+        print(c)
 
+def save_joy_conf():
+    print(button_left, button_right, button_confirm, button_cancel)
+    confs = {
+        "button_left" : button_left,
+        "button_right" : button_right,
+        "button_confirm" : button_confirm,
+        "button_cancel" : button_cancel
+    }
+    with open("confs.json", "w") as file:
+        json.dump(confs, file, indent=4)
+
+    
+
+
+#loop de config do joy/teclado
 def config_joy():
+    global button_left, button_right, button_confirm, button_cancel
     buttons = ["button_left", "button_right", "button_confirm", "button_cancel"]
     button_names = ["Left", "Right", "Confirm", "Cancel"]
     button_ids   = []
@@ -47,25 +65,70 @@ def config_joy():
         janela.blit(telaParaDesenhar,[0,0])
         pygame.display.flip ()
     print(button_ids)
+    button_left = button_ids[0]
+    button_right = button_ids[1]
+    button_confirm = button_ids[2]
+    button_cancel = button_ids[3]
+    save_joy_conf()
     
 
-def read_joy_conf():
-    pass
-try:
-    f = open("confs.txt", "r")
-except:
-    print("Config does not exist")
-    config_joy()
+
+def load_or_config_joy():
+    global button_cancel, button_confirm, button_left, button_right
+    try:
+        f = open("confs.json", "r")
+        f.close()
+        with open('confs.json', 'r') as file:
+            data = json.load(file)
+        button_left = data['button_left']
+        button_right = data['button_right']
+        button_confirm = data['button_confirm']
+        button_cancel = data['button_cancel']
+        print(button_left, button_right, button_confirm, button_cancel)
+
+    except:
+        print("Config does not exist")
+        config_joy()
 
 
+def load_apps():
+    apps = []
+    tmp = []
+    with open('apps.json', 'r') as file:
+        apps = json.load(file)
+    
+
+    for a in apps:
+    
+        apps[a]['bitmap'] = pygame.image.load(apps[a]['background'])
+        tmp.append(apps[a])
+        
+
+    return tmp
 
 
+load_or_config_joy()
+
+
+apps = load_apps()
+if len(apps) > 0:
+    current_app = 0
+print(apps)
 
 sair = False
 while not sair:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sair = True
+        elif event.type == pygame.KEYUP:
+            if(event.key == button_left):
+                current_app = current_app - 1
+                if(current_app < 0):
+                    current_app = len(apps) -1
+            elif event.key == button_right:
+                current_app = current_app + 1
+                if current_app >= len(apps):
+                    current_app = 0
     #limpeza
     janela.fill(BRANCO)
     telaParaDesenhar.fill(BRANCO)
@@ -73,6 +136,10 @@ while not sair:
     #limpeza
     janela.fill(BRANCO)
     
+    if current_app >=0:
+        telaParaDesenhar.blit(apps[current_app]['bitmap'], [0,0])
+    
+    janela.blit(telaParaDesenhar, [0,0])
 
     pygame.display.flip()
     
