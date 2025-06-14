@@ -3,15 +3,15 @@
         "name": "Kenworth K100",
         "background" : "k100.jpg",
         "commands": [
-            "cd apps",
-            "python code3.py"
+            "apps\\sec9",
+            "python main.py"
         ]
     },
     "App2": {
         "name": "Kenworth K100 White",
         "background" : "k1003.jpg",
         "commands": [
-            "cd apps",
+            "apps",
             "python code4.py"
         ]
     }

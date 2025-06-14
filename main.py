@@ -1,6 +1,9 @@
 import pygame
 import json
-import subprocess 
+import subprocess
+
+import os 
+
 button_left = None
 button_right = None 
 button_confirm = None
@@ -22,8 +25,12 @@ clock = pygame.time.Clock()
 font = pygame.font.Font(None , 24)
 
 def run_commands(cmd):
-    for c in cmd:
-        print(c)
+    #for c in cmd:
+    c = cmd
+    print(c)
+        #subprocess.call(c)
+    subprocess.run(" ".join(c[1]),cwd="".join(c[0]))
+        #os.system(" ".join(c))
 
 def save_joy_conf():
     print(button_left, button_right, button_confirm, button_cancel)
@@ -102,7 +109,12 @@ def load_apps():
     
         apps[a]['bitmap'] = pygame.image.load(apps[a]['background'])
         tmp.append(apps[a])
-        
+        cmds = apps[a]['commands']
+        for i in range(0,len(cmds)):
+            cmds[i] = cmds[i].split()
+    
+        apps[a]['commands'] = cmds
+
 
     return tmp
 
@@ -129,6 +141,8 @@ while not sair:
                 current_app = current_app + 1
                 if current_app >= len(apps):
                     current_app = 0
+            elif event.key == button_confirm:
+                run_commands(apps[current_app]['commands'])
     #limpeza
     janela.fill(BRANCO)
     telaParaDesenhar.fill(BRANCO)
