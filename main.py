@@ -16,7 +16,7 @@ current_app = -1
 pygame.init()
 tamanhoJanela = [ 800, 600]
 telaParaDesenhar = pygame.Surface((tamanhoJanela[0],tamanhoJanela[1]))
-janela = pygame.display.set_mode(tamanhoJanela)
+janela = pygame.display.set_mode(tamanhoJanela)#, pygame.FULLSCREEN)
 pygame.display.set_caption("Eventos de Teclado")
 BRANCO = (255,255,255)
 
@@ -26,11 +26,17 @@ font = pygame.font.Font(None , 24)
 
 def run_commands(cmd):
     #for c in cmd:
+    global janela
     c = cmd
-    print(c)
+    #print(c)
         #subprocess.call(c)
-    subprocess.run(" ".join(c[1]),cwd="".join(c[0]))
-        #os.system(" ".join(c))
+    #oculta janela
+    janela = pygame.display.set_mode(tamanhoJanela, flags=pygame.HIDDEN)
+    rc = subprocess.run(" ".join(c[1]),cwd="".join(c[0]))
+    #print(rc)
+    #exibe a janela
+    janela = pygame.display.set_mode(tamanhoJanela)#, pygame.FULLSCREEN)
+        
 
 def save_joy_conf():
     print(button_left, button_right, button_confirm, button_cancel)
