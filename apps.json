@@ -14,5 +14,13 @@
             "apps",
             "python code4.py"
         ]
+    },
+    "RetroGames": {
+        "name": "Retroarch",
+        "background" : "rtgames.jpg",
+        "commands": [
+            "",
+            "retroarch"
+        ]
     }
 }

@@ -16,7 +16,7 @@ current_app = -1
 pygame.init()
 tamanhoJanela = [ 800, 600]
 telaParaDesenhar = pygame.Surface((tamanhoJanela[0],tamanhoJanela[1]))
-janela = pygame.display.set_mode(tamanhoJanela)#, pygame.FULLSCREEN)
+janela = pygame.display.set_mode(tamanhoJanela, pygame.FULLSCREEN)
 pygame.display.set_caption("Eventos de Teclado")
 BRANCO = (255,255,255)
 
